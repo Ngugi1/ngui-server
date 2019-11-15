@@ -3,7 +3,7 @@ const createError = require('http-errors');
 const https = require('https')
 const bodyParser = require('body-parser');
 
-const database = require('./DataBaseFunctions');
+const database = require('./dbUtilities');
 const barcodeReader = require('./BarcodeReader');
 const EventHandler = require('./EventHandler');
 
@@ -42,7 +42,7 @@ app.get('/shoppingList/:sid', function (req, res) {
 
 //database.getShoppingList(userId)();*/
 
-database.insertProduct(1234,"hello",null,null,null,null,null,null)
+//database.insertProduct(1234,"hello",null,null,null,null,null,null)
 
 
 barcodeReader.getProductByBarcode("5449000011527")
