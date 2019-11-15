@@ -3,8 +3,8 @@ const createError = require('http-errors');
 const https = require('https')
 const bodyParser = require('body-parser');
 
-const database = require('./dbUtilities');
-const barcodeReader = require('./BarcodeReader');
+const database = require('./dbUtil');
+const barcodeReader = require('./barcodeModule');
 const EventHandler = require('./EventHandler');
 
 //const eventHandler = new EventHandler();
@@ -16,11 +16,22 @@ var router = express.Router();
 
 
 app.post('/upload', (req, res) => {
-    const message = req.body.barcodes;
-    console.log(message);
-    // Lookup the product name among other details
-    // This is the API key - 6s59ggwl1mr1aoguyzoczcyxn5wbvf
-    // Read the message being sent here
+    const barcodes = req.body.barcodes;
+    console.log(barcodes);
+    if (barcodes != null) {
+        for (const barcode in barcodes) {
+            const barcodeDetails = barcodeReader.getProductByBarcode(barcode)
+            if (barcodeDetails != null) {
+                database.insertProduct(barcodeDetails.barcode,
+                    barcodeDetails.name, barcodeDetails.description,
+                    barcodeDetails.manufacturer,
+                    null,
+                    null,
+                    Date.now())
+            }
+
+        }
+    }
 
     res.send('Complete');
 });
@@ -36,7 +47,7 @@ app.get('/shoppingList/:sid', function (req, res) {
     // Access userId via: req.params.userId
     // Access bookId via: req.params.bookId
     res.send(req.params);
-  })
+})
 
 // Http options
 
@@ -45,7 +56,7 @@ app.get('/shoppingList/:sid', function (req, res) {
 //database.insertProduct(1234,"hello",null,null,null,null,null,null)
 
 
-barcodeReader.getProductByBarcode("5449000011527")
+// barcodeReader.getProductByBarcode("5449000011527")
 app.listen(3000, () => console.log("Listening on port 3000"))
 
 
