@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Generation Time: Nov 15, 2019 at 12:06 PM
+-- Generation Time: Nov 15, 2019 at 04:57 PM
 -- Server version: 5.7.24-log
 -- PHP Version: 7.2.10
 
@@ -25,6 +25,32 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `barcode` int(12) NOT NULL,
+  `name` varchar(250) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `manufacturer` varchar(250) DEFAULT NULL,
+  `image` varchar(500) DEFAULT NULL,
+  `size` varchar(150) DEFAULT NULL,
+  `brand` varchar(100) DEFAULT NULL,
+  `detected_date` bigint(10) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`barcode`, `name`, `description`, `manufacturer`, `image`, `size`, `brand`, `detected_date`, `status`) VALUES
+(123, 'test', NULL, NULL, NULL, NULL, NULL, 0, 1),
+(1234, 'hello', NULL, NULL, NULL, NULL, NULL, 0, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -34,15 +60,8 @@ CREATE TABLE `users` (
   `password` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
-  `created_date` varchar(10) NOT NULL
+  `created_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`user_id`, `user_name`, `password`, `name`, `last_name`, `created_date`) VALUES
-(1, 'reyhan', '123', 'reyhan', 'kalhor', '14/11/2019');
 
 --
 -- Indexes for dumped tables
@@ -54,6 +73,16 @@ INSERT INTO `users` (`user_id`, `user_name`, `password`, `name`, `last_name`, `c
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `user_name` (`user_name`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
