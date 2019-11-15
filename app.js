@@ -40,7 +40,11 @@ app.get('/shoppingList/:sid', function (req, res) {
 
 // Http options
 
-//database.getShoppingList(userId)();
+//database.getShoppingList(userId)();*/
+
+database.insertProduct(1234,"hello",null,null,null,null,null,null)
+
+
 barcodeReader.getProductByBarcode("5449000011527")
 app.listen(3000, () => console.log("Listening on port 3000"))
 
