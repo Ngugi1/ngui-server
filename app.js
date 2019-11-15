@@ -32,7 +32,7 @@ app.get('/fetch', (req, res) => {
 
 // Http options
 
-//database.addRelative();
+//database.getShoppingList(userId)();
 barcodeReader.getProductByBarcode("5449000011527")
 app.listen(3000, () => console.log("Listening on port 3000"))
 

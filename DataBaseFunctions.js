@@ -70,4 +70,5 @@ function getUser(userName, password){
 module.exports.createAccount = createAccount;
 module.exports.login = login;
 module.exports.addRelative = addRelative;
+module.exports.getShoppingList = getShoppingList;
 
