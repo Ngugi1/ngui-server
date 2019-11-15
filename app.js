@@ -1,10 +1,16 @@
 const express = require('express');
+const createError = require('http-errors');
 const https = require('https')
-const datatrick = require('datakick')
 const bodyParser = require('body-parser');
-let app = require('express')();
-app.use(express.json());
 
+const database = require('./DataBaseFunctions');
+const barcodeReader = require('./BarcodeReader');
+const EventHandler = require('./EventHandler');
+//const eventHandler = new EventHandler();
+
+
+let app = express();
+app.use(express.json());
 
 
 app.post('/upload', (req, res) => {
@@ -19,20 +25,19 @@ app.post('/upload', (req, res) => {
 
 app.get('/fetch', (req, res) => {
     // Given shopping list ID, we send you your list
-    const data = getProduct("5449000011527")
+    const data = barcodeReader.getProductByBarcode("5449000011527")
     res.send({ list: ['Cola', 'Beer', 'Milk', 'Ram'], data: data })
 
 })
 
 // Http options
 
-// Function to fetch the barcode
-function getProduct(barcode) {
-    datatrick.item("5449000011527").then(data => {
-        console.log(JSON.stringify(data))
-    }).catch(error => {
-        console.log("error")
-    })
-}
-getProduct("5449000011527")
+//database.addRelative();
+barcodeReader.getProductByBarcode("5449000011527")
 app.listen(3000, () => console.log("Listening on port 3000"))
+
+
+
+
+
+

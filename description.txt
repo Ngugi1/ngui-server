@@ -1,0 +1,1 @@
+1- install mysql "npm install mysql"
