@@ -74,13 +74,8 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
 }
 
 
-module.exports.createAccount = createAccount;
+
 module.exports.insertProduct = insertProduct;
-module.exports.login = login;
-module.exports.addRelative = addRelative;
-module.exports.getShoppingList = getShoppingList;
-
-
 
 
 //barcode not null
