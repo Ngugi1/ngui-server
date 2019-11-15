@@ -6,11 +6,13 @@ const bodyParser = require('body-parser');
 const database = require('./DataBaseFunctions');
 const barcodeReader = require('./BarcodeReader');
 const EventHandler = require('./EventHandler');
+
 //const eventHandler = new EventHandler();
 
 
 let app = express();
 app.use(express.json());
+var router = express.Router();
 
 
 app.post('/upload', (req, res) => {
@@ -29,6 +31,12 @@ app.get('/fetch', (req, res) => {
     res.send({ list: ['Cola', 'Beer', 'Milk', 'Ram'], data: data })
 
 })
+
+app.get('/shoppingList/:sid', function (req, res) {
+    // Access userId via: req.params.userId
+    // Access bookId via: req.params.bookId
+    res.send(req.params);
+  })
 
 // Http options
 

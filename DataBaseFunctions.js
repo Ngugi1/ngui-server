@@ -16,24 +16,15 @@ const con = MySQL.createConnection({
 
 
   //function to get shopping list
-function createAccount(userName , password) {
+function createAccount(userName , password) {}
 
-}
-
-function login(userName,password)
-{
-
-}
-
+function login(userName,password){}
 function addRelative(){}
-
-function getProducts()
-{}
+function getProducts(){}
 
 function addUser(){
   con.connect(function(err) {
     if (err) throw err;
-    console.log("Connected!");
     var sql = "";
     con.query(sql, function (err, result) {
       if (err) throw err;
@@ -45,7 +36,6 @@ function addUser(){
 function getShoppingList(userId){
   con.connect(function(err) {
     if (err) throw err;
-    console.log("Connected!");
     var sql = "SELECT * FROM shoppinglist a join shoppinglistdetails b on a.si_id = b.sl_id where a.owner_id = ?";
     con.query(sql, [userId] , function (err, result) {
       if (err) throw err;
@@ -57,8 +47,18 @@ function getShoppingList(userId){
 function getUser(userName, password){
   con.connect(function(err) {
     if (err) throw err;
-    console.log("Connected!");
     var sql = "select * from users where user_name = ? and password=?";
+    con.query(sql, [userName,password], function (err, result) {
+      if (err) throw err;
+      return result;
+    });
+  });
+}
+
+function insertProduct(barcode , name, brand, manufacture, desription){
+  con.connect(function(err) {
+    if (err) throw err;
+    var sql = "insert into products ()";
     con.query(sql, [userName,password], function (err, result) {
       if (err) throw err;
       return result;
@@ -72,3 +72,16 @@ module.exports.login = login;
 module.exports.addRelative = addRelative;
 module.exports.getShoppingList = getShoppingList;
 
+
+
+//barcode not null
+//name of product
+//brand
+//manufacture
+//name not null
+//description
+//detectedDate
+
+//Sam pass me this options and I insert them in database
+//I choose change database structure
+//just simplify it
