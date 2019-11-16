@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Generation Time: Nov 15, 2019 at 04:57 PM
+-- Generation Time: Nov 16, 2019 at 02:48 PM
 -- Server version: 5.7.24-log
 -- PHP Version: 7.2.10
 
@@ -37,16 +37,17 @@ CREATE TABLE `products` (
   `size` varchar(150) DEFAULT NULL,
   `brand` varchar(100) DEFAULT NULL,
   `detected_date` bigint(10) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '1'
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `amount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`barcode`, `name`, `description`, `manufacturer`, `image`, `size`, `brand`, `detected_date`, `status`) VALUES
-(123, 'test', NULL, NULL, NULL, NULL, NULL, 0, 1),
-(1234, 'hello', NULL, NULL, NULL, NULL, NULL, 0, 1);
+INSERT INTO `products` (`barcode`, `name`, `description`, `manufacturer`, `image`, `size`, `brand`, `detected_date`, `status`, `amount`) VALUES
+(123, 'test', NULL, NULL, NULL, NULL, NULL, 12345, 1, 3),
+(1234, 'hello', NULL, NULL, NULL, NULL, NULL, 0, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -66,6 +67,12 @@ CREATE TABLE `users` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`barcode`,`detected_date`,`status`);
 
 --
 -- Indexes for table `users`
