@@ -34,7 +34,7 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
 function updateAmountofProduct(barcode, detected_date){
   con.connect(function(err) {
     if (err) throw err;
-    var sql = "update products set amount = amount + 1 and detected_date = ?  where barcode = ? and status = 1";
+    var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? and status = 1";
     con.query(sql, [barcode , detected_date], function (err, result) {
       if (err) throw err;
       return result;
@@ -101,25 +101,13 @@ function showUNpurchasedProducts(){
   });
 } 
 
-
-
-
-
-// status = 2 means purchased product
-function setProductAsPurchased(barcode, detected_date)
-{
-  con.connect(function(err) {
-    if (err) throw err;
-    var sql = "update products set status = 2 where barcode = ? and detected_date = ? ";
-    con.query(sql,[barcode , detected_date], function (err, result) {
-      if (err) throw err;
-      return result;
-    });
-  });
-}
-
 module.exports.insertProduct = insertProduct;
+module.exports.updateAmountofProduct = updateAmountofProduct;
+module.exports.deleteProduct = deleteProduct;
+module.exports.buyProduct = buyProduct;
 module.exports.showAllProducts = showAllProducts;
 module.exports.showBoughtProducts = showBoughtProducts;
 module.exports.showUNpurchasedProducts = showUNpurchasedProducts;
+
+
 
