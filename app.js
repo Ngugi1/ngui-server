@@ -62,24 +62,10 @@ app.delete('/delete/:barcode', (req,res) => {
     })
 })
 
+/*database.buyProduct(123,(status) => {
+    console.log(status)
+})*/
 
-
-
-// app.get('/shoppingList/:sid', function (req, res) {
-//     // Access userId via: req.params.userId
-//     // Access bookId via: req.params.bookId
-//     res.send(req.params);
-// })
-
-
-// app.get('/login', function(req, res) {
-//      database.login();
-// });
-
-// app.get('/showAllProducts', function(req, res, next) {
-//     res.json(database.showAllProducts());
-// });
-// database.insertProduct(1234565,"hello","hello",null,null,null,null,12345443,1);
 app.listen(3000, () => console.log("Listening on port 3000"))
 
 
