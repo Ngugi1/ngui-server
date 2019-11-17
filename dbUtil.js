@@ -67,7 +67,7 @@ function deleteProduct(barcode, detected_date, callback){
       client.query(sql, [barcode , detected_date], function (err, result) {
         client.release();
         if (err) callback({'error': err});
-        callback(result);
+        callback({'deleted': true});
       });
     });
   }else {
