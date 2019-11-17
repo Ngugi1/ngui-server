@@ -20,7 +20,6 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
       "VALUES (?,?,?,?,?,?,?,?,?)";
       client.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
       });
@@ -30,7 +29,6 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
       "VALUES (?,?,?,?,?,?,?,?,?)";
       client.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
   });
@@ -45,7 +43,6 @@ function updateAmountofProduct(barcode, detected_date, callback){
       var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? and status = 1";
       client.query(sql, [barcode , detected_date], function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
       });
@@ -54,7 +51,6 @@ function updateAmountofProduct(barcode, detected_date, callback){
     var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? and status = 1";
     client.query(sql, [barcode , detected_date], function(err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
   });
@@ -70,7 +66,6 @@ function deleteProduct(barcode, detected_date, callback){
       var sql = "update products set status = 3 where barcode = ? and detected_date = ? ";      
       client.query(sql, [barcode , detected_date], function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
       });
@@ -79,7 +74,6 @@ function deleteProduct(barcode, detected_date, callback){
     var sql = "update products set status = 3 where barcode = ? and detected_date = ? ";
         client.query(sql, [barcode , detected_date], function(err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
   });
@@ -94,7 +88,6 @@ function buyProduct(barcode, callback){
       var sql = "update products set status = 2 where barcode = ? and status = 1 ";
       client.query(sql, [barcode], function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
       });
@@ -103,7 +96,6 @@ function buyProduct(barcode, callback){
     var sql = "update products set status = 2 where barcode = ? and status = 1 ";
     client.query(sql, [barcode], function(err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
   });
@@ -118,7 +110,6 @@ function showAllProducts( callback){
       var sql = "SELECT * FROM products where status <> 3";
       client.query(sql, function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
       });
@@ -127,7 +118,6 @@ function showAllProducts( callback){
     var sql = "SELECT * FROM products where status <> 3";
     client.query(sql,  function(err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
   });
@@ -141,7 +131,6 @@ function showBoughtProducts( callback){
       var sql = "SELECT * FROM products where status = 2";
       client.query(sql, [barcode], function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
       });
@@ -150,7 +139,6 @@ function showBoughtProducts( callback){
     var sql = "SELECT * FROM products where status = 2";
     client.query(sql, [barcode], function(err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
   });
@@ -164,7 +152,6 @@ function showUNpurchasedProducts( callback){
       var sql = "SELECT * FROM products where status = 1";
       client.query(sql, [barcode], function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
       });
@@ -173,7 +160,6 @@ function showUNpurchasedProducts( callback){
     var sql = "SELECT * FROM products where status = 1";
     client.query(sql, [barcode], function(err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
   });
@@ -188,7 +174,6 @@ function login(callback){
       var sql = "select * from users where user_id = 1 ";
       client.query(sql, function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
       });
@@ -197,7 +182,6 @@ function login(callback){
     var sql = "select * from users where user_id = 1 ";
     client.query(sql, function (err, result) {
         client.release();
-        pool.end();
         if (err) callback({'error': err});
         callback(result);
   })
