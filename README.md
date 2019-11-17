@@ -22,7 +22,8 @@ provide a json object with the following fields
 `{
 		"barcode": 123878877834,
 		"name": "dgdfgfh",
-		"description": "dfdsgsgdfghf"
+		"description": "dfdsgsgdfghf",
+		"amount": 10
 }`
 
 ## **52.91.230.14:3000/delete/:barcode**
