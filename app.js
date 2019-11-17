@@ -54,10 +54,11 @@ app.post('/create', (req,res) => {
     })
 })
 
-app.delete('/delete/:barcode', (req,res) => {
+app.delete('/delete/:barcode/:date_detected', (req,res) => {
     const barcode = req.params.barcode;
+    const date = req.params.date_detected;
     console.log(barcode)
-    database.deleteProduct(barcode, (status) => {
+    database.deleteProduct(barcode,date, (status) => {
         res.send(status)
     })
 })
