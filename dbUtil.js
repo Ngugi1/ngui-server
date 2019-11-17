@@ -29,7 +29,7 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
       "VALUES (?,?,?,?,?,?,?,?,?)";
       con.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
         con.end()
-        if (err) callback('error');
+        if (err) callback({'error': error});
         callback(result);
   })
 }
@@ -49,14 +49,14 @@ function updateAmountofProduct(barcode, detected_date){
 }
 
 // status = 3 means deleted product
-function deleteProduct(barcode)
+function deleteProduct(barcode, callback)
 {
     con.connect(function(err) {
     if (err) throw err;
     var sql = "update products set status = 3 where barcode = ? and status = 1 ";
     con.query(sql,[barcode], function (err, result) {
-      if (err) throw err;
-      return result;
+      if (err) callback({'error': err});
+      callback(result);
     });
   });
 }
@@ -75,7 +75,7 @@ function buyProduct(barcode)
 
 
 function showAllProducts(callback){
-  if(conn == null) {
+  if(con == null) {
     con.connect(function(err) {
       if (err) throw err;
       var sql = "SELECT * FROM products where status <> 3";

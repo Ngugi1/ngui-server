@@ -1,7 +1,6 @@
 const express = require('express');
 const createError = require('http-errors');
 const https = require('https')
-const bodyParser = require('body-parser');
 
 const database = require('./dbUtil');
 const barcodeReader = require('./barcodeModule');
@@ -13,7 +12,7 @@ let app = express();
 app.use(express.json());
 var router = express.Router();
 
-
+// This is for the bin
 app.post('/upload', (req, res) => {
     const barcodes = req.body.barcodes;
     console.log(barcodes);
@@ -38,6 +37,7 @@ app.post('/upload', (req, res) => {
     }
 });
 
+// load all products
 app.get('/fetch', (req, res) => {
     // Given shopping list ID, we send you your list
     const data = database.showAllProducts((data) => {
@@ -45,6 +45,26 @@ app.get('/fetch', (req, res) => {
         res.send(JSON.stringify(data))
     })
 })
+
+
+app.post('/create', (req,res) => {
+    const product = req.body;
+    console.log(product)
+    database.insertProduct(product.barcode, product.name, product.description,null, null, null,null, Date.now(), null, (data) => {
+        res.send(JSON.stringify(data))
+    })
+})
+
+app.delete('/delete/:barcode', (req,res) => {
+    const barcode = req.params.barcode;
+    console.log(barcode)
+    database.deleteProduct(barcode, (status) => {
+        res.send(status)
+    })
+})
+
+
+
 
 // app.get('/shoppingList/:sid', function (req, res) {
 //     // Access userId via: req.params.userId
