@@ -49,15 +49,22 @@ app.get('/shoppingList/:sid', function (req, res) {
     res.send(req.params);
 })
 
-// Http options
 
-//database.getShoppingList(userId)();*/
+router.get('/login', function(req, res, next) {
 
-//database.insertProduct(1234,"hello",null,null,null,null,null,null)
+     database.login();
+
+});
+
+router.get('/showAllProducts', function(req, res, next) {
+
+    res.json(database.showAllProducts());
+});
 
 
-// barcodeReader.getProductByBarcode("5449000011527")
-app.listen(3000, () => console.log("Listening on port 3000"))
+database.insertProduct(123456,"hello","hello",null,null,null,null,12345443,1);
+
+//app.listen(3000, () => console.log("Listening on port 3000"))
 
 
 

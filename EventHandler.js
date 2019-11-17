@@ -7,3 +7,6 @@ class EventHandler extends EventEmitter {
         this.emit('EventName', {id: 1 , url: "http"})
     }
 }
+
+
+module.exports = EventHandler;
