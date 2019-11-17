@@ -20,7 +20,7 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
       "VALUES (?,?,?,?,?,?,?,?,?)";
       con.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
         con.end()
-        if (err) callback('error');
+        if (err) callback({'error': err});
         callback(result);
       });
     });
@@ -29,7 +29,7 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
       "VALUES (?,?,?,?,?,?,?,?,?)";
       con.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
         con.end()
-        if (err) callback({'error': error});
+        if (err) callback({'error': err});
         callback(result);
   })
 }
@@ -81,7 +81,7 @@ function showAllProducts(callback){
       var sql = "SELECT * FROM products where status <> 3";
       con.query(sql, function (err, result) {
         con.end()
-        if (err) callback(error);
+        if (err) callback({'error': err});
         callback (result);
       });
     });
@@ -89,7 +89,7 @@ function showAllProducts(callback){
     var sql = "SELECT * FROM products where status <> 3";
       con.query(sql, function (err, result) {
         con.end()
-        if (err) callback(error);
+        if (err) callback({'error': err});
         callback (result);
       });
   }
