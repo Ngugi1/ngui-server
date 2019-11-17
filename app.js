@@ -12,7 +12,7 @@ app.use(express.json());
 var router = express.Router();
 
 // This is for the bin
-app.post('/upload', (req, res) => {
+/*app.post('/upload', (req, res) => {
     const barcodes = req.body.barcodes;
     console.log(barcodes);
     if (barcodes != null) {
@@ -60,13 +60,13 @@ app.delete('/delete/:barcode', (req,res) => {
     database.deleteProduct(barcode, (status) => {
         res.send(status)
     })
-})
-
-/*database.buyProduct(123,(status) => {
-    console.log(status)
 })*/
 
-app.listen(3000, () => console.log("Listening on port 3000"))
+database.buyProduct(111111,(status) => {
+    console.log(status)
+})
+
+//app.listen(3000, () => console.log("Listening on port 3000"))
 
 
 
