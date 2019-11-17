@@ -15,7 +15,7 @@ const con = mysql.createConnection({
 function insertProduct(barcode , name, description, manufacturer, image,size, brand, detectedDate, amount, callback){
   if(con != null){
     con.connect(function(err) {
-      if (err) throw err;
+      if (err) callback({'error': err});
       var sql = "INSERT INTO products(barcode, name, description, manufacturer, image, size, brand, detected_date, amount) " + 
       "VALUES (?,?,?,?,?,?,?,?,?)";
       con.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
@@ -52,7 +52,7 @@ function updateAmountofProduct(barcode, detected_date){
 function deleteProduct(barcode, callback)
 {
     con.connect(function(err) {
-    if (err) throw err;
+    if (err) callback({'error': err});
     var sql = "update products set status = 3 where barcode = ? and status = 1 ";
     con.query(sql,[barcode], function (err, result) {
       if (err) callback({'error': err});
@@ -77,7 +77,7 @@ function buyProduct(barcode)
 function showAllProducts(callback){
   if(con == null) {
     con.connect(function(err) {
-      if (err) throw err;
+      if (err) callback({'error': err});
       var sql = "SELECT * FROM products where status <> 3";
       con.query(sql, function (err, result) {
         con.end()
