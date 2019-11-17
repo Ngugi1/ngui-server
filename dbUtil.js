@@ -13,7 +13,6 @@ const con = mysql.createConnection({
 // it means if the product is detected and it is status is unbought we just update the amount and prevent to add 
 //the new row for it in table but also update the detected_date
 function insertProduct(barcode , name, description, manufacturer, image,size, brand, detectedDate, amount, callback){
-  if(con != null){
     con.connect(function(err) {
       if (err) callback({'error': err});
       var sql = "INSERT INTO products(barcode, name, description, manufacturer, image, size, brand, detected_date, amount) " + 
@@ -24,15 +23,6 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
         callback(result);
       });
     });
-  }else {
-    var sql = "INSERT INTO products(barcode, name, description, manufacturer, image, size, brand, detected_date, amount) " + 
-      "VALUES (?,?,?,?,?,?,?,?,?)";
-      con.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
-        con.end()
-        if (err) callback({'error': err});
-        callback(result);
-  })
-}
  
 }
 
@@ -55,6 +45,7 @@ function deleteProduct(barcode, callback)
     if (err) callback({'error': err});
     var sql = "update products set status = 3 where barcode = ? and status = 1 ";
     con.query(sql,[barcode], function (err, result) {
+      con.end()
       if (err) callback({'error': err});
       callback(result);
     });
@@ -75,7 +66,6 @@ function buyProduct(barcode)
 
 
 function showAllProducts(callback){
-  if(con == null) {
     con.connect(function(err) {
       if (err) callback({'error': err});
       var sql = "SELECT * FROM products where status <> 3";
@@ -85,15 +75,6 @@ function showAllProducts(callback){
         callback (result);
       });
     });
-  }else{
-    var sql = "SELECT * FROM products where status <> 3";
-      con.query(sql, function (err, result) {
-        con.end()
-        if (err) callback({'error': err});
-        callback (result);
-      });
-  }
- 
 } 
 
 function showBoughtProducts(){
