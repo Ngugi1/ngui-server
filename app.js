@@ -1,7 +1,6 @@
 const express = require('express');
 const createError = require('http-errors');
 const https = require('https')
-
 const database = require('./dbUtil');
 const barcodeReader = require('./barcodeModule');
 
