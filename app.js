@@ -13,31 +13,37 @@ var router = express.Router();
 
 // This is for the bin
 app.post('/upload', (req, res) => {
-    const barcodes = req.body.barcodes;
+    const barcodes = req.body.barcodes.barcodes;
     console.log(barcodes);
     if (barcodes != null) {
-        for (const barcode in barcodes) {
-            barcodeReader.getProductByBarcode(barcode, (barcodeDetails) => {
-                if (barcodeDetails.message === 'undefined') {
-                    database.insertProduct(barcodeDetails.barcode,
-                        barcodeDetails.name, barcodeDetails.description,
-                        barcodeDetails.manufacturer,
-                        null,
-                        null,
-                        null,
-                        Date.now(),
-                        null,
-                        (data) => {
-                            res.send(data)
-                        })
-                } else {
-                    res.send({ error: 'item not found' })
-                }
-            })
-        }
+        barcodeReader.getProductByBarcode(barcodes[0], (barcodeDetails) => {
+            console.log(barcodeDetails)
+            if (!barcodeDetails.message) {
+                console.log('inserting')
+                console.log(barcodeDetails.barcode)
+                console.log(barcodeDetails.name.de)
+                console.log(barcodeDetails.description.de)
+                console.log(barcodeDetails.manufacturer)
+                console.log(Date.now())
+                database.insertProduct(barcodeDetails.barcode,
+                    barcodeDetails.name.de,
+                    barcodeDetails.description.de,
+                    barcodeDetails.manufacturer,
+                    null,
+                    null,
+                    null,
+                    Date.now(),
+                    null,
+                    (data) => {
+                        console.log('done ---- > ' + data)
+                        res.send(data)
+                    })
+            } else {
+                res.send({ error: 'item not found' })
+            }
+        });
     }
 });
-
 // load all products
 app.get('/fetch', (req, res) => {
     // Given shopping list ID, we send you your list
@@ -76,7 +82,7 @@ app.delete('/delete/:barcode/:date_detected', (req, res) => {
 database.login((status) => {
     console.log(status)
 })*/
-
+// database.insertProduct(222222, '22222', '22222', null, '', null, '', Date.now(), null, console.log)
 app.listen(3000, () => console.log("Listening on port 3000"))
 
 
