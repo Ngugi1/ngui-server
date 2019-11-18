@@ -18,7 +18,7 @@ app.post('/upload', (req, res) => {
     if (barcodes != null) {
         for (const barcode in barcodes) {
             barcodeReader.getProductByBarcode(barcode, (barcodeDetails) => {
-                if (!barcodeDetails.error != null) {
+                if (barcodeDetails.message === 'undefined') {
                     database.insertProduct(barcodeDetails.barcode,
                         barcodeDetails.name, barcodeDetails.description,
                         barcodeDetails.manufacturer,
