@@ -17,21 +17,21 @@ app.post('/upload', (req, res) => {
     console.log(barcodes);
     if (barcodes != null) {
         for (const barcode in barcodes) {
-         barcodeReader.getProductByBarcode(barcode, (barcodeDetails) => {
-            if (barcodeDetails != null) {
-                database.insertProduct(barcodeDetails.barcode,
-                    barcodeDetails.name, barcodeDetails.description,
-                    barcodeDetails.manufacturer,
-                    null,
-                    null,
-                    null,
-                    Date.now(),
-                    null,
-                    (data) => {
-                        res.send(data)
-                    })
-            }
-         })
+            barcodeReader.getProductByBarcode(barcode, (barcodeDetails) => {
+                if (barcodeDetails != null) {
+                    database.insertProduct(barcodeDetails.barcode,
+                        barcodeDetails.name, barcodeDetails.description,
+                        barcodeDetails.manufacturer,
+                        null,
+                        null,
+                        null,
+                        Date.now(),
+                        null,
+                        (data) => {
+                            res.send(data)
+                        })
+                }
+            })
         }
     }
 });
@@ -46,19 +46,19 @@ app.get('/fetch', (req, res) => {
 })
 
 
-app.post('/create', (req,res) => {
+app.post('/create', (req, res) => {
     const product = req.body;
     console.log(product)
-    database.insertProduct(product.barcode, product.name, product.description,null, null, null,null, Date.now(), product.amount, (data) => {
+    database.insertProduct(product.barcode, product.name, product.description, null, null, null, null, Date.now(), product.amount, (data) => {
         res.send(JSON.stringify(data))
     })
 })
 
-app.delete('/delete/:barcode/:date_detected', (req,res) => {
+app.delete('/delete/:barcode/:date_detected', (req, res) => {
     const barcode = req.params.barcode;
     const date = req.params.date_detected;
     console.log(barcode)
-    database.deleteProduct(barcode,date, (status) => {
+    database.deleteProduct(barcode, date, (status) => {
         res.send(status)
     })
 })
