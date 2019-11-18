@@ -18,7 +18,7 @@ app.post('/upload', (req, res) => {
     if (barcodes != null) {
         for (const barcode in barcodes) {
             barcodeReader.getProductByBarcode(barcode, (barcodeDetails) => {
-                if (barcodeDetails != null) {
+                if (!barcodeDetails.error != null) {
                     database.insertProduct(barcodeDetails.barcode,
                         barcodeDetails.name, barcodeDetails.description,
                         barcodeDetails.manufacturer,
@@ -30,6 +30,8 @@ app.post('/upload', (req, res) => {
                         (data) => {
                             res.send(data)
                         })
+                } else {
+                    res.send({ error: 'item not found' })
                 }
             })
         }
