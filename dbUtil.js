@@ -150,7 +150,7 @@ function showUNpurchasedProducts( callback){
     pool.getConnection(function(err,client) {
       if (err) throw err;
       var sql = "SELECT * FROM products where status = 1";
-      client.query(sql, [barcode], function (err, result) {
+      client.query(sql, function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -158,7 +158,7 @@ function showUNpurchasedProducts( callback){
     });
   }else {
     var sql = "SELECT * FROM products where status = 1";
-    client.query(sql, [barcode], function(err, result) {
+    client.query(sql, function(err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -167,26 +167,52 @@ function showUNpurchasedProducts( callback){
 }
 
 
-function login(callback){
+function insertShoppingList(name , ownerId, created_date, callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
       if (err) throw err;
-      var sql = "select * from users where user_id = 1 ";
-      client.query(sql, function (err, result) {
+      var sql = "INSERT INTO `shoppingList`(`shoppingList_name`, `owner_id` , `created_date`) VALUES (?,?,?)";
+      client.query(sql, [name , ownerId,created_date], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
       });
     });
   }else {
-    var sql = "select * from users where user_id = 1 ";
-    client.query(sql, function (err, result) {
+    var sql = "INSERT INTO `shoppingList`(`shoppingList_name`, `owner_id` , `created_date`) VALUES (?,?,?)";
+      client.query(sql, [name , ownerId, created_date], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
-  })
-}  
+  });
 }
+} 
+
+function insertShoppingListDetail(product , amount, created_date, shoppingListName , callback){
+  if(pool != null){
+    pool.getConnection(function(err,client) {
+      if (err) throw err;
+      var sql = "INSERT INTO shoppinglistdetails (`sl_id`, `product`, `amount`, `created_date`)" +
+      " SELECT shoppingList_id , ? , ? , ? from shoppinglist where shoppingList_name = ?";
+      client.query(sql, [product , amount, created_date,shoppingListName], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+      });
+    });
+  }else {
+    var sql = "INSERT INTO shoppinglistdetails (`sl_id`, `product`, `amount`, `created_date`)" +
+      " SELECT shoppingList_id , ? , ? , ? from shoppinglist where shoppingList_name = ?";
+      client.query(sql, [product , amount, created_date, shoppingListName], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+  });
+}
+}
+
+//delete from `shoppinglistdetails` 
+//where sl_id = (select shoppinglist_id from shoppinglist where shoppinglist_name = "sl1")
 
 module.exports.insertProduct = insertProduct;
 module.exports.updateAmountofProduct = updateAmountofProduct;
@@ -195,7 +221,8 @@ module.exports.buyProduct = buyProduct;
 module.exports.showAllProducts = showAllProducts;
 module.exports.showBoughtProducts = showBoughtProducts;
 module.exports.showUNpurchasedProducts = showUNpurchasedProducts;
-module.exports.login = login;
+module.exports.insertShoppingList = insertShoppingList;
+module.exports.insertShoppingListDetail = insertShoppingListDetail;
 
 
 

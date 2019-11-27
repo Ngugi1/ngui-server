@@ -71,22 +71,13 @@ app.delete('/delete/:barcode/:date_detected', (req, res) => {
     })
 })
 
-/*database.deleteProduct(123,(status) => {
-    console.log(status)
-})*/
 
-/*database.buyProduct(123456,(status) => {
-    console.log(status)
-})
-
-database.login((status) => {
-    console.log(status)
-})*/
-// database.insertProduct(222222, '22222', '22222', null, '', null, '', Date.now(), null, console.log)
 app.listen(3000, () => console.log("Listening on port 3000"))
 
 
-
+/*database.insertShoppingListDetail("p3"  , 1 , 1234,  "sl2", (status) => {
+    console.log(status)
+})*/
 
 
 
