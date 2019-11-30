@@ -18,22 +18,16 @@ app.post('/upload', (req, res) => {
     if (barcodes != null) {
         barcodeReader.getProductByBarcode(barcodes[0], (barcodeDetails) => {
             console.log(barcodeDetails)
-            if (!barcodeDetails.message) {
-                console.log('inserting')
-                console.log(barcodeDetails.barcode)
-                console.log(barcodeDetails.name.de)
-                console.log(barcodeDetails.description.de)
-                console.log(barcodeDetails.manufacturer)
-                console.log(Date.now())
+            if (!barcodeDetails.error) {
                 database.insertProduct(barcodeDetails.barcode,
-                    barcodeDetails.name.de,
-                    barcodeDetails.description.de,
+                    barcodeDetails.name,
+                    barcodeDetails.description,
                     barcodeDetails.manufacturer,
-                    null,
-                    null,
-                    null,
-                    Date.now(),
-                    null,
+                    barcodeDetails.image,
+                    barcodeDetails.size,
+                    barcodeDetails.brand,
+                    barcodeDetails.date_detected,
+                    barcodeDetails.amount,
                     (data) => {
                         console.log('done ---- > ' + data)
                         res.send(data)
@@ -56,7 +50,7 @@ app.get('/fetch', (req, res) => {
 
 // load shoppinglist created by application not trash
 app.get('/fetch/shoppingLists', (req, res) => {
-    const data = database.showShoppingListByType("unpurchased" ,(data) => {
+    const data = database.showShoppingListByType("unpurchased", (data) => {
         console.log(JSON.stringify(data))
         res.send(JSON.stringify(data))
     })
