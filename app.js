@@ -44,6 +44,7 @@ app.post('/upload', (req, res) => {
         });
     }
 });
+
 // load all products
 app.get('/fetch', (req, res) => {
     // Given shopping list ID, we send you your list
@@ -53,6 +54,13 @@ app.get('/fetch', (req, res) => {
     })
 })
 
+// load shoppinglist created by application not trash
+app.get('/fetch/shoppingLists', (req, res) => {
+    const data = database.showShoppingListByType("unpurchased" ,(data) => {
+        console.log(JSON.stringify(data))
+        res.send(JSON.stringify(data))
+    })
+})
 
 app.post('/create', (req, res) => {
     const product = req.body;
@@ -75,17 +83,17 @@ app.delete('/delete/:barcode/:date_detected', (req, res) => {
 app.listen(3000, () => console.log("Listening on port 3000"))
 
 
+
+
+
+
 /*database.insertShoppingListDetail("p3"  , 1 , 1234,  "sl2", (status) => {
     console.log(status)
 })*/
 
-
-
 /*database.showSpecificShoppingList("sl2", (status) => {
     console.log(status)
 })*/
-
-
 
 /*database.insertShoppingListDetail("p4", 1, 12345 , "sl3",  (status) => {
     console.log(status)
