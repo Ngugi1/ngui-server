@@ -57,7 +57,6 @@ function updateAmountofProduct(barcode, detected_date, callback){
 }
 }
 
-
 // status = 3 means deleted product
 function deleteProduct(barcode, detected_date, callback){
   if(pool != null){
@@ -211,8 +210,60 @@ function insertShoppingListDetail(product , amount, created_date, shoppingListNa
 }
 }
 
-//delete from `shoppinglistdetails` 
-//where sl_id = (select shoppinglist_id from shoppinglist where shoppinglist_name = "sl1")
+
+function deleteShoppingList(name , callback){
+  if(pool != null){
+    pool.getConnection(function(err,client) {
+      if (err) throw err;
+      var sql = "UPDATE `shoppinglist` SET `status`=3 WHERE shoppinglist_name = ?";
+      client.query(sql, [name], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+      });
+    });
+  }else {
+    var sql = "UPDATE `shoppinglist` SET `status`=3 WHERE shoppinglist_name = ?";
+      client.query(sql, [name], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+  });
+}
+}
+
+function deleteShoppingListDetail(name , productName, callback){
+  if(pool != null){
+    pool.getConnection(function(err,client) {
+      if (err) throw err;
+      var sql = "UPDATE `shoppinglistdetails` b set b.`status`= 3 WHERE sl_id = " +
+      "(select a.shoppingList_id from shoppinglist a where a.shoppingList_name = ?) and b.product = ?";
+      client.query(sql, [name, productName], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+      });
+    });
+  }else {
+    var sql = "UPDATE `shoppinglistdetails` b set b.`status`= 3 WHERE sl_id = " +
+      "(select a.shoppingList_id from shoppinglist a where a.shoppingList_name = ?) and b.product = ?";
+      client.query(sql, [name, productName], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+  });
+}
+}
+
+function updateShoppingListDetailAmount(name , productName, amount, callback){}
+
+function showPShoppingListByType(type, callback){}
+
+function showSpecificShoppingList(name , callback){}
+
+
+
+
 
 module.exports.insertProduct = insertProduct;
 module.exports.updateAmountofProduct = updateAmountofProduct;
@@ -223,6 +274,8 @@ module.exports.showBoughtProducts = showBoughtProducts;
 module.exports.showUNpurchasedProducts = showUNpurchasedProducts;
 module.exports.insertShoppingList = insertShoppingList;
 module.exports.insertShoppingListDetail = insertShoppingListDetail;
+module.exports.deleteShoppingList = deleteShoppingList;
+module.exports.deleteShoppingListDetail = deleteShoppingListDetail;
 
 
 
