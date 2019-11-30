@@ -81,3 +81,12 @@ app.listen(3000, () => console.log("Listening on port 3000"))
 
 
 
+/*database.showSpecificShoppingList("sl2", (status) => {
+    console.log(status)
+})*/
+
+
+
+/*database.insertShoppingListDetail("p4", 1, 12345 , "sl3",  (status) => {
+    console.log(status)
+})*/

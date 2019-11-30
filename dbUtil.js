@@ -9,6 +9,19 @@ const mysql = require('mysql');
     database : 'smart_trash'
   });
 
+
+  //local database
+  /*const pool = mysql.createPool({
+    connectionLimit : 100,
+    host     : 'localhost',
+    port     :  '3307',
+    user     :  'root',
+    password : 'root',
+    database : 'smartbin'
+  });*/
+
+
+
 // in this table -> the combination of barcode and status is primary key
 // it means if the product is detected and it is status is unbought we just update the amount and prevent to add 
 //the new row for it in table but also update the detected_date
@@ -255,11 +268,91 @@ function deleteShoppingListDetail(name , productName, callback){
 }
 }
 
-function updateShoppingListDetailAmount(name , productName, amount, callback){}
+function updateShoppingListDetailAmount(name , productName, amount, callback){
+  if(pool != null){
+    pool.getConnection(function(err,client) {
+      if (err) throw err;
+      var sql = "UPDATE `shoppinglistdetails` b set b.`amount`= ? WHERE sl_id = " +
+      "(select a.shoppingList_id from shoppinglist a where a.shoppingList_name = ?) and b.product = ?";
+      client.query(sql, [amount, name, productName], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+      });
+    });
+  }else {
+    var sql = "UPDATE `shoppinglistdetails` b set b.`amount`= ? WHERE sl_id = " +
+      "(select a.shoppingList_id from shoppinglist a where a.shoppingList_name = ?) and b.product = ?";
+      client.query(sql, [amount, name, productName], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+  });
+}
+}
 
-function showPShoppingListByType(type, callback){}
+function showShoppingListByType(type, callback){
+  var status = ''
+  switch(type.toLowerCase()){
+        case "purchased" :
+          status = 2;
+          break;
+        case "deleted" :
+          status = 3
+          break;
+        case "unpurchased" :
+            status = 1 ;
+            break ;
+        default:
+            status = 1 ;
+            break ;
+  }
 
-function showSpecificShoppingList(name , callback){}
+  if(pool != null){
+    pool.getConnection(function(err,client) {
+      if (err) throw err;
+      var sql = "select * from shoppinglist a join shoppinglistdetails b on a.shoppingList_id = b.sl_id " +
+      "where a.status = ? and b.status = 1";
+      client.query(sql,[status] , function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+      });
+    });
+  }else {
+    var sql = "select * from shoppinglist a join shoppinglistdetails b on a.shoppingList_id = b.sl_id " +
+      "where a.status = ? and b.status = 1";
+      client.query(sql,[status] , function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+  });
+}
+}
+
+
+function showSpecificShoppingList(name , callback){
+  if(pool != null){
+    pool.getConnection(function(err,client) {
+      if (err) throw err;
+      var sql = "select * from shoppinglist a join shoppinglistdetails b on a.shoppingList_id = b.sl_id " +
+      "where a.status = 1 and b.status = 1 and a.shoppingList_name = ?";
+      client.query(sql,[name] , function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+      });
+    });
+  }else {
+    var sql = "select * from shoppinglist a join shoppinglistdetails b on a.shoppingList_id = b.sl_id " +
+      "where a.status = 1 and b.status = 1 and a.shoppingList_name = ?";
+      client.query(sql,[name] , function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+  });
+}
+}
 
 
 
@@ -276,6 +369,9 @@ module.exports.insertShoppingList = insertShoppingList;
 module.exports.insertShoppingListDetail = insertShoppingListDetail;
 module.exports.deleteShoppingList = deleteShoppingList;
 module.exports.deleteShoppingListDetail = deleteShoppingListDetail;
+module.exports.updateShoppingListDetailAmount = updateShoppingListDetailAmount;
+module.exports.showShoppingListByType = showShoppingListByType;
+module.exports.showSpecificShoppingList = showSpecificShoppingList;
 
 
 
