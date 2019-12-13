@@ -18,22 +18,16 @@ app.post('/upload', (req, res) => {
     if (barcodes != null) {
         barcodeReader.getProductByBarcode(barcodes[0], (barcodeDetails) => {
             console.log(barcodeDetails)
-            if (!barcodeDetails.message) {
-                console.log('inserting')
-                console.log(barcodeDetails.barcode)
-                console.log(barcodeDetails.name.de)
-                console.log(barcodeDetails.description.de)
-                console.log(barcodeDetails.manufacturer)
-                console.log(Date.now())
+            if (!barcodeDetails.error) {
                 database.insertProduct(barcodeDetails.barcode,
-                    barcodeDetails.name.de,
-                    barcodeDetails.description.de,
+                    barcodeDetails.name,
+                    barcodeDetails.description,
                     barcodeDetails.manufacturer,
-                    null,
-                    null,
-                    null,
-                    Date.now(),
-                    null,
+                    barcodeDetails.image,
+                    barcodeDetails.size,
+                    barcodeDetails.brand,
+                    barcodeDetails.date_detected,
+                    barcodeDetails.amount,
                     (data) => {
                         console.log('done ---- > ' + data)
                         res.send(data)
@@ -44,6 +38,7 @@ app.post('/upload', (req, res) => {
         });
     }
 });
+
 // load all products
 app.get('/fetch', (req, res) => {
     // Given shopping list ID, we send you your list
@@ -53,6 +48,13 @@ app.get('/fetch', (req, res) => {
     })
 })
 
+// load shoppinglist created by application not trash
+app.get('/fetch/shoppingLists', (req, res) => {
+    const data = database.showShoppingListByType("unpurchased", (data) => {
+        console.log(JSON.stringify(data))
+        res.send(JSON.stringify(data))
+    })
+})
 
 app.post('/create', (req, res) => {
     const product = req.body;
@@ -71,18 +73,7 @@ app.delete('/delete/:barcode/:date_detected', (req, res) => {
     })
 })
 
-/*database.deleteProduct(123,(status) => {
-    console.log(status)
-})*/
 
-/*database.buyProduct(123456,(status) => {
-    console.log(status)
-})
-
-database.login((status) => {
-    console.log(status)
-})*/
-// database.insertProduct(222222, '22222', '22222', null, '', null, '', Date.now(), null, console.log)
 app.listen(3000, () => console.log("Listening on port 3000"))
 
 
@@ -90,3 +81,14 @@ app.listen(3000, () => console.log("Listening on port 3000"))
 
 
 
+/*database.insertShoppingListDetail("p3"  , 1 , 1234,  "sl2", (status) => {
+    console.log(status)
+})*/
+
+/*database.showSpecificShoppingList("sl2", (status) => {
+    console.log(status)
+})*/
+
+/*database.insertShoppingListDetail("p4", 1, 12345 , "sl3",  (status) => {
+    console.log(status)
+})*/
