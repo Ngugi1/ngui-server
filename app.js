@@ -57,7 +57,7 @@ app.get('/fetch/shoppingLists', (req, res) => {
 })
 
 app.post('/create', (req, res) => {
-    const product = req.body;
+    const product = req.body.item;
     console.log("\n ................................");
     console.log(product)
     database.insertProduct(product.barcode, product.name, product.description, null, null, null, null, Date.now(), product.amount, (data) => {
