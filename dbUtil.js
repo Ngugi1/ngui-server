@@ -10,6 +10,17 @@ const mysql = require('mysql');
   });
 
 
+ //AWS database
+  /*const pool = mysql.createPool({
+    connectionLimit : 100,
+    host     : 'publicsmartbininstance.cxpor3uvjo8f.eu-west-3.rds.amazonaws.com',
+    port     :  '3306',
+    user     :  'app',
+    password : 'smartbin2019',
+    database : 'SMART_BIN'
+  });*/
+
+
   //local database
   /*const pool = mysql.createPool({
     connectionLimit : 100,
@@ -25,13 +36,13 @@ const mysql = require('mysql');
 // in this table -> the combination of barcode and status is primary key
 // it means if the product is detected and it is status is unbought we just update the amount and prevent to add 
 //the new row for it in table but also update the detected_date
-function insertProduct(barcode , name, description, manufacturer, image,size, brand, detectedDate, amount, callback){
+function insertProduct(barcode , name, description, manufacturer, image,size, brand, amount, callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
       if (err) throw err;
       var sql = "INSERT INTO products(barcode, name, description, manufacturer, image, size, brand, detected_date, amount) " + 
       "VALUES (?,?,?,?,?,?,?,?,?)";
-      client.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
+      client.query(sql, [barcode , name, description, manufacturer, image,size, brand, Date.now(),amount], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -40,7 +51,7 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
   }else {
     var sql = "INSERT INTO products(barcode, name, description, manufacturer, image, size, brand, detected_date, amount) " + 
       "VALUES (?,?,?,?,?,?,?,?,?)";
-      client.query(sql, [barcode , name, description, manufacturer, image,size, brand, detectedDate,amount], function (err, result) {
+      client.query(sql, [barcode , name, description, manufacturer, image,size, brand, Date.now() ,amount], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -49,12 +60,12 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
 } 
 
 //to update the amount of detected product and prevent to add more rows for one product
-function updateAmountofProduct(barcode, detected_date, callback){
+function updateAmountofProduct(barcode, callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
       if (err) throw err;
       var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? and status = 1";
-      client.query(sql, [barcode , detected_date], function (err, result) {
+      client.query(sql, [barcode , Date.now()], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -62,7 +73,7 @@ function updateAmountofProduct(barcode, detected_date, callback){
     });
   }else {
     var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? and status = 1";
-    client.query(sql, [barcode , detected_date], function(err, result) {
+    client.query(sql, [barcode , Date.now()], function(err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -71,12 +82,12 @@ function updateAmountofProduct(barcode, detected_date, callback){
 }
 
 // status = 3 means deleted product
-function deleteProduct(barcode, detected_date, callback){
+function deleteProduct(barcode, callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
       if (err) throw err;
       var sql = "update products set status = 3 where barcode = ? and detected_date = ? ";      
-      client.query(sql, [barcode , detected_date], function (err, result) {
+      client.query(sql, [barcode , Date.now()], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback({'deleted': true});
@@ -84,7 +95,7 @@ function deleteProduct(barcode, detected_date, callback){
     });
   }else {
     var sql = "update products set status = 3 where barcode = ? and detected_date = ? ";
-        client.query(sql, [barcode , detected_date], function(err, result) {
+        client.query(sql, [barcode , Date.now()], function(err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -179,12 +190,12 @@ function showUNpurchasedProducts( callback){
 }
 
 
-function insertShoppingList(name , ownerId, created_date, callback){
+function insertShoppingList(name , ownerId, callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
       if (err) throw err;
       var sql = "INSERT INTO `shoppingList`(`shoppingList_name`, `owner_id` , `created_date`) VALUES (?,?,?)";
-      client.query(sql, [name , ownerId,created_date], function (err, result) {
+      client.query(sql, [name , ownerId, Date.now()], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -192,7 +203,7 @@ function insertShoppingList(name , ownerId, created_date, callback){
     });
   }else {
     var sql = "INSERT INTO `shoppingList`(`shoppingList_name`, `owner_id` , `created_date`) VALUES (?,?,?)";
-      client.query(sql, [name , ownerId, created_date], function (err, result) {
+      client.query(sql, [name , ownerId, Date.now()], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -200,13 +211,13 @@ function insertShoppingList(name , ownerId, created_date, callback){
 }
 } 
 
-function insertShoppingListDetail(product , amount, created_date, shoppingListName , callback){
+function insertShoppingListDetail(product , amount, shoppingListName , callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
       if (err) throw err;
       var sql = "INSERT INTO shoppinglistdetails (`sl_id`, `product`, `amount`, `created_date`)" +
       " SELECT shoppingList_id , ? , ? , ? from shoppinglist where shoppingList_name = ?";
-      client.query(sql, [product , amount, created_date,shoppingListName], function (err, result) {
+      client.query(sql, [product , amount, Date.now(), shoppingListName], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -215,7 +226,7 @@ function insertShoppingListDetail(product , amount, created_date, shoppingListNa
   }else {
     var sql = "INSERT INTO shoppinglistdetails (`sl_id`, `product`, `amount`, `created_date`)" +
       " SELECT shoppingList_id , ? , ? , ? from shoppinglist where shoppingList_name = ?";
-      client.query(sql, [product , amount, created_date, shoppingListName], function (err, result) {
+      client.query(sql, [product , amount, Date.now(), shoppingListName], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
