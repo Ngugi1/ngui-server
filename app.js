@@ -7,7 +7,7 @@ const barcodeReader = require('./barcodeModule');
 //const eventHandler = new EventHandler();
 
 
-/*let app = express();
+let app = express();
 app.use(express.json());
 var router = express.Router();
 
@@ -78,14 +78,14 @@ app.delete('/delete/:barcode/:date_detected', (req, res) => {
 app.listen(3000, () => console.log("Listening on port 3000"))
 
 
-*/
 
 
 
-database.insertProduct2("6574677836762","33","333",null,null,null,null,1, (status) => {
+
+/*database.insertProduct2("6574677836762","33","333",null,null,null,null,1, (status) => {
 
     console.log(status);
-});
+});*/
 
 /*database.showSpecificShoppingList("sl2", (status) => {
     console.log(status)
