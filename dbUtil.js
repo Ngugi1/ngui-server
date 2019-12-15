@@ -1,27 +1,15 @@
 const mysql = require('mysql');
 
-  const pool = mysql.createPool({
+  /*const pool = mysql.createPool({
     connectionLimit : 100,
     host     : '85.10.205.173',
     port     :  '3306',
     user     :  'sgroot',
     password : '5eCAs,QEyU0Zb9dT',
     database : 'smart_trash'
-  });
-
-
- //AWS database
-  /*const pool = mysql.createPool({
-    connectionLimit : 100,
-    host     : 'publicsmartbininstance.cxpor3uvjo8f.eu-west-3.rds.amazonaws.com',
-    port     :  '3306',
-    user     :  'app',
-    password : 'smartbin2019',
-    database : 'SMART_BIN'
   });*/
 
-
-  //local database
+    //local database
   /*const pool = mysql.createPool({
     connectionLimit : 100,
     host     : 'localhost',
@@ -31,11 +19,116 @@ const mysql = require('mysql');
     database : 'smartbin'
   });*/
 
+ //AWS database
+  const pool = mysql.createPool({
+    connectionLimit : 100,
+    host     : 'publicsmartbininstance.cxpor3uvjo8f.eu-west-3.rds.amazonaws.com',
+    port     :  '3306',
+    user     :  'app',
+    password : 'smartbin2019',
+    database : 'SMART_BIN'
+  });
 
 
 // in this table -> the combination of barcode and status is primary key
 // it means if the product is detected and it is status is unbought we just update the amount and prevent to add 
 //the new row for it in table but also update the detected_date
+function insertProduct2(barcode , name, description, manufacturer, image,size, brand, amount, callback){
+  if(isProductExist(barcode) > 0){
+    if(pool != null){
+      pool.getConnection(function(err,client) {
+        if (err) throw err;
+        var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? " +
+        " and status = 1";
+        client.query(sql, [Date.now() , barcode], function (err, result) {
+          client.release();
+          if (err) callback({'error': err});
+          callback(result);
+        });
+      });
+    }else {
+      var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? and status = 1";
+        client.query(sql, [Date.now() , barcode], function (err, result) {
+          client.release();
+          if (err) callback({'error': err});
+          callback(result);
+    });
+  }
+  }
+  else
+  {
+    
+  if(pool != null){
+    pool.getConnection(function(err,client) {
+      if (err) throw err;
+      var sql = "INSERT INTO products(barcode, name, description, manufacturer, image, size, brand, detected_date, amount) " + 
+      "VALUES (?,?,?,?,?,?,?,?,?)";
+      client.query(sql, [barcode , name, description, manufacturer, image,size, brand, Date.now(),amount], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+      });
+    });
+  }else {
+    var sql = "INSERT INTO products(barcode, name, description, manufacturer, image, size, brand, detected_date, amount) " + 
+      "VALUES (?,?,?,?,?,?,?,?,?)";
+      client.query(sql, [barcode , name, description, manufacturer, image,size, brand, Date.now() ,amount], function (err, result) {
+        client.release();
+        if (err) callback({'error': err});
+        callback(result);
+  });
+}
+  }
+  
+} 
+
+
+function isProductExist(barcode, callback){
+  if(pool != null){
+    pool.getConnection(function(err,client) {
+      if (err) throw err;
+      var sql = "select * from products where barcode = ?";
+      client.query(sql, [barcode], function (err, result) {
+        client.release();
+        if (err) throw err;
+        return(result.length);
+      });
+    });
+  }
+  else
+  {
+    var sql = "select * from products where barcode = ?";
+    client.query(sql, [barcode], function (err, result) {
+      client.release();
+      if (err) throw err;
+      return(result.length);
+    });
+  }}
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function insertProduct(barcode , name, description, manufacturer, image,size, brand, amount, callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
@@ -59,13 +152,15 @@ function insertProduct(barcode , name, description, manufacturer, image,size, br
 }
 } 
 
+
 //to update the amount of detected product and prevent to add more rows for one product
 function updateAmountofProduct(barcode, callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
       if (err) throw err;
-      var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? and status = 1";
-      client.query(sql, [barcode , Date.now()], function (err, result) {
+      var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? " +
+      " and status = 1";
+      client.query(sql, [Date.now() , barcode], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -73,7 +168,7 @@ function updateAmountofProduct(barcode, callback){
     });
   }else {
     var sql = "update products set amount = amount + 1 , detected_date = ?  where barcode = ? and status = 1";
-    client.query(sql, [barcode , Date.now()], function(err, result) {
+      client.query(sql, [Date.now() , barcode], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -82,12 +177,12 @@ function updateAmountofProduct(barcode, callback){
 }
 
 // status = 3 means deleted product
-function deleteProduct(barcode, callback){
+function deleteProduct(barcode, detected_date, callback){
   if(pool != null){
     pool.getConnection(function(err,client) {
       if (err) throw err;
       var sql = "update products set status = 3 where barcode = ? and detected_date = ? ";      
-      client.query(sql, [barcode , Date.now()], function (err, result) {
+      client.query(sql, [barcode , detected_date], function (err, result) {
         client.release();
         if (err) callback({'error': err});
         callback({'deleted': true});
@@ -95,7 +190,7 @@ function deleteProduct(barcode, callback){
     });
   }else {
     var sql = "update products set status = 3 where barcode = ? and detected_date = ? ";
-        client.query(sql, [barcode , Date.now()], function(err, result) {
+        client.query(sql, [barcode , detected_date], function(err, result) {
         client.release();
         if (err) callback({'error': err});
         callback(result);
@@ -370,6 +465,8 @@ function showSpecificShoppingList(name , callback){
 
 
 module.exports.insertProduct = insertProduct;
+module.exports.isProductExist = isProductExist;
+module.exports.insertProduct2 = insertProduct2;
 module.exports.updateAmountofProduct = updateAmountofProduct;
 module.exports.deleteProduct = deleteProduct;
 module.exports.buyProduct = buyProduct;
