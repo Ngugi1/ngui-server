@@ -60,7 +60,7 @@ app.post('/create', (req, res) => {
     const product = req.body;
     console.log("\n ................................");
     console.log(product)
-    database.insertProduct(product.barcode, product.name, product.description, null, null, null, null, Date.now(), product.amount, (data) => {
+    database.insertProduct(product.barcode, product.name, product.description, null, null, null, null, product.amount, (data) => {
         res.send(JSON.stringify(data))
     })
 })
