@@ -29,7 +29,7 @@ app.post('/upload', (req, res) => {
                     barcodeDetails.amount,
                     (data) => {
                         console.log('done ---- > ' + data)
-                        res.send(data)
+                        res.send({done: "done"})
                     })
             } else {
                 res.send({ error: 'item not found' })
