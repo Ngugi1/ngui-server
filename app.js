@@ -26,7 +26,6 @@ app.post('/upload', (req, res) => {
                     barcodeDetails.image,
                     barcodeDetails.size,
                     barcodeDetails.brand,
-                    barcodeDetails.date_detected,
                     barcodeDetails.amount,
                     (data) => {
                         console.log('done ---- > ' + data)
